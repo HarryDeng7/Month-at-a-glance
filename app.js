@@ -26,6 +26,13 @@ const contentEl = document.querySelector(".content");
 const sharedViewEl = document.getElementById("sharedView");
 const sharedSubEl = document.getElementById("sharedSub");
 const sharedDaysEl = document.getElementById("sharedDays");
+const backBtn = document.getElementById("backBtn");
+const openBtn = document.getElementById("openBtn");
+const openDialog = document.getElementById("openDialog");
+const openForm = document.getElementById("openForm");
+const openInput = document.getElementById("openUrlInput");
+const openErrorEl = document.getElementById("openError");
+const closeOpenBtn = document.getElementById("closeOpenBtn");
 
 const today = new Date();
 let view = { y: today.getFullYear(), m: today.getMonth() };
@@ -198,14 +205,14 @@ function renderShared(payload) {
   sharedSubEl.textContent = count + " task" + (count === 1 ? "" : "s") + " shared with you";
 }
 
-function startShared(raw) {
+function parsePayload(token) {
   let payload = null;
   try {
-    payload = decodeShare(raw);
+    payload = decodeShare(token);
   } catch (e) {
-    return false;
+    return null;
   }
-  if (!payload || typeof payload !== "object" || Array.isArray(payload)) return false;
+  if (!payload || typeof payload !== "object" || Array.isArray(payload)) return null;
 
   const clean = {};
   Object.keys(payload).forEach(function (key) {
@@ -213,15 +220,43 @@ function startShared(raw) {
     const list = payload[key].filter(function (t) { return t && typeof t.t === "string"; });
     if (list.length) clean[key] = list;
   });
-  if (!Object.keys(clean).length) return false;
+  return Object.keys(clean).length ? clean : null;
+}
+
+function extractToken(text) {
+  const s = String(text).trim();
+  if (!s) return null;
+  const withParam = s.match(/[#&?]s=([A-Za-z0-9_-]+)/);
+  if (withParam) return withParam[1];
+  return /^[A-Za-z0-9_-]+$/.test(s) ? s : null;
+}
+
+function startShared(token) {
+  const payload = parsePayload(token);
+  if (!payload) return false;
 
   contentEl.hidden = true;
   shareBtn.hidden = true;
   cancelShareBtn.hidden = true;
+  openBtn.hidden = true;
   sharedViewEl.hidden = false;
   document.title = "Shared plan - Month at a Glance";
-  renderShared(clean);
+  renderShared(payload);
   return true;
+}
+
+function showEditor() {
+  try {
+    history.replaceState(null, "", location.pathname + location.search);
+  } catch (e) {
+    location.hash = "";
+  }
+  contentEl.hidden = false;
+  sharedViewEl.hidden = true;
+  shareBtn.hidden = false;
+  openBtn.hidden = false;
+  document.title = "Month at a Glance";
+  render();
 }
 
 document.getElementById("prev").addEventListener("click", function () {
@@ -340,11 +375,41 @@ copyBtn.addEventListener("click", function () {
   }
 });
 
+openBtn.addEventListener("click", function () {
+  setShareMode(false);
+  openErrorEl.hidden = true;
+  openInput.value = "";
+  openDialog.hidden = false;
+  openInput.focus();
+});
+
+closeOpenBtn.addEventListener("click", function () {
+  openDialog.hidden = true;
+});
+
+openForm.addEventListener("submit", function (e) {
+  e.preventDefault();
+  const token = extractToken(openInput.value);
+  if (!token || !parsePayload(token)) {
+    openErrorEl.textContent = "That does not look like a share link.";
+    openErrorEl.hidden = false;
+    return;
+  }
+  openDialog.hidden = true;
+  openInput.value = "";
+  openErrorEl.hidden = true;
+  if (location.hash === "#s=" + token) startShared(token);
+  else location.hash = "#s=" + token;
+});
+
+backBtn.addEventListener("click", showEditor);
+
 document.addEventListener("keydown", function (e) {
   if (e.target === inputEl) return;
 
   if (e.key === "Escape") {
     if (!shareDialog.hidden) shareDialog.hidden = true;
+    else if (!openDialog.hidden) openDialog.hidden = true;
     else if (shareMode) setShareMode(false);
     return;
   }

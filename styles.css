@@ -307,6 +307,13 @@ button, input { font: inherit; color: inherit; }
   padding: 16px;
 }
 
+.shared-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
 .shared-title { margin: 0; font-size: 18px; font-weight: 600; }
 .shared-sub { margin: 4px 0 0; font-size: 12px; color: var(--muted); }
 .shared-days { display: flex; flex-direction: column; gap: 10px; }
@@ -371,6 +378,7 @@ button, input { font: inherit; color: inherit; }
 }
 
 .dialog-url:focus { border-color: var(--accent); }
+.dialog-error { margin: 0; font-size: 12px; color: #ef4444; }
 .dialog-actions { display: flex; gap: 8px; justify-content: flex-end; }
 
 .del {

@@ -23,6 +23,7 @@
     <div class="topbar-actions">
       <button class="pill-btn" id="cancelShareBtn" hidden>Cancel</button>
       <button class="pill-btn" id="shareBtn">Share</button>
+      <button class="pill-btn" id="openBtn">Open</button>
       <button class="pill-btn theme-btn" id="themeBtn" aria-label="Switch color theme">&#9728; Light</button>
     </div>
   </header>
@@ -54,8 +55,11 @@
 
   <section class="shared-view" id="sharedView" hidden>
     <header class="shared-head">
-      <h2 class="shared-title" id="sharedTitle">Shared plan</h2>
-      <p class="shared-sub" id="sharedSub"></p>
+      <div>
+        <h2 class="shared-title" id="sharedTitle">Shared plan</h2>
+        <p class="shared-sub" id="sharedSub"></p>
+      </div>
+      <button class="pill-btn" id="backBtn">My calendar</button>
     </header>
     <div class="shared-days" id="sharedDays"></div>
   </section>
@@ -68,6 +72,21 @@
       <div class="dialog-actions">
         <button class="pill-btn" id="copyBtn">Copy link</button>
         <button class="pill-btn" id="closeDialogBtn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="dialog" id="openDialog" hidden>
+    <div class="dialog-box" role="dialog" aria-modal="true" aria-labelledby="openDialogTitle">
+      <h2 class="dialog-title" id="openDialogTitle">Open a shared link</h2>
+      <p class="dialog-text">Paste the link someone sent you. Nothing is uploaded - the tasks travel inside the link itself.</p>
+      <form id="openForm" autocomplete="off">
+        <input class="dialog-url" id="openUrlInput" type="text" placeholder="https://...#s=..." />
+      </form>
+      <p class="dialog-error" id="openError" hidden></p>
+      <div class="dialog-actions">
+        <button class="pill-btn" id="openConfirmBtn">Open</button>
+        <button class="pill-btn" id="closeOpenBtn">Cancel</button>
       </div>
     </div>
   </div>
