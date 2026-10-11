@@ -1,11 +1,27 @@
 :root {
+  color-scheme: dark;
   --bg: #0f172a;
   --panel: #1e293b;
   --panel-hi: #26334a;
   --line: #334155;
   --text: #e2e8f0;
   --muted: #94a3b8;
+  --num: #cbd5e1;
+  --placeholder: #64748b;
   --accent: #f59e0b;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f1f5f9;
+  --panel: #ffffff;
+  --panel-hi: #e8eef6;
+  --line: #cbd5e1;
+  --text: #0f172a;
+  --muted: #5b6b80;
+  --num: #475569;
+  --placeholder: #94a3b8;
+  --accent: #d97706;
 }
 
 * { box-sizing: border-box; }
@@ -29,7 +45,17 @@ button, input { font: inherit; color: inherit; }
   padding: 12px 14px;
 }
 
-.topbar { padding: 0 2px; }
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 2px;
+}
+
+.titles { min-width: 0; }
+
+.theme-btn { flex: 0 0 auto; }
 
 .brand {
   margin: 0;
@@ -139,7 +165,7 @@ button, input { font: inherit; color: inherit; }
 
 .num {
   font-size: 12px;
-  color: #cbd5e1;
+  color: var(--num);
   flex: 0 0 auto;
 }
 
@@ -190,7 +216,7 @@ button, input { font: inherit; color: inherit; }
 }
 
 #taskInput:focus { border-color: var(--accent); }
-#taskInput::placeholder { color: #64748b; }
+#taskInput::placeholder { color: var(--placeholder); }
 
 .tasks {
   list-style: none;
@@ -246,6 +272,8 @@ button, input { font: inherit; color: inherit; }
     min-height: 100%;
     grid-template-rows: auto auto;
   }
+  .topbar { flex-wrap: wrap; }
+  .brand { font-size: 27px; }
   .content { grid-template-columns: minmax(0, 1fr); }
   .grid { grid-template-rows: repeat(6, 72px); }
   .panel { max-height: 45vh; }

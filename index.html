@@ -3,14 +3,24 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Plan Calendar</title>
+<title>Month at a Glance</title>
+<script>
+  try {
+    if (localStorage.getItem("plan-calendar.theme") === "light") {
+      document.documentElement.dataset.theme = "light";
+    }
+  } catch (e) {}
+</script>
 <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 <main class="app">
   <header class="topbar">
-    <h1 class="brand">Month at a Glance</h1>
-    <p class="tagline">See what's ahead, plan the whole month in one look</p>
+    <div class="titles">
+      <h1 class="brand">Month at a Glance</h1>
+      <p class="tagline">See what's ahead, plan the whole month in one look</p>
+    </div>
+    <button class="pill-btn theme-btn" id="themeBtn" aria-label="Switch color theme">&#9728; Light</button>
   </header>
 
   <div class="content">

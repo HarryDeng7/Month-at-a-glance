@@ -177,3 +177,26 @@ document.addEventListener("keydown", function (e) {
 
 render();
 inputEl.focus();
+
+const THEME_KEY = "plan-calendar.theme";
+const themeBtn = document.getElementById("themeBtn");
+
+function applyTheme(theme) {
+  if (theme === "light") {
+    document.documentElement.dataset.theme = "light";
+    themeBtn.textContent = "\u263E Dark";
+  } else {
+    delete document.documentElement.dataset.theme;
+    themeBtn.textContent = "\u2600 Light";
+  }
+}
+
+themeBtn.addEventListener("click", function () {
+  const next = document.documentElement.dataset.theme === "light" ? "dark" : "light";
+  try {
+    localStorage.setItem(THEME_KEY, next);
+  } catch (e) {}
+  applyTheme(next);
+});
+
+applyTheme(document.documentElement.dataset.theme === "light" ? "light" : "dark");
