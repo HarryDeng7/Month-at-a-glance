@@ -8,27 +8,34 @@
 </head>
 <body>
 <main class="app">
-  <section class="cal">
-    <header class="bar">
-      <h1 id="title">—</h1>
-      <div class="bar-right">
-        <button class="icon-btn" id="prev" aria-label="Previous month">&#8249;</button>
-        <button class="icon-btn" id="next" aria-label="Next month">&#8250;</button>
-        <button class="pill-btn" id="today">Today</button>
-      </div>
-    </header>
+  <header class="topbar">
+    <h1 class="brand">Month at a Glance</h1>
+    <p class="tagline">See what's ahead, plan the whole month in one look</p>
+  </header>
 
-    <div class="dow" id="dow"></div>
-    <div class="grid" id="grid"></div>
-  </section>
+  <div class="content">
+    <section class="cal">
+      <header class="bar">
+        <h2 class="month-title" id="title">—</h2>
+        <div class="bar-right">
+          <button class="icon-btn" id="prev" aria-label="Previous month">&#8249;</button>
+          <button class="icon-btn" id="next" aria-label="Next month">&#8250;</button>
+          <button class="pill-btn" id="today">Today</button>
+        </div>
+      </header>
 
-  <aside class="panel">
-    <h2 id="panelTitle">—</h2>
-    <form id="addForm" autocomplete="off">
-      <input id="taskInput" type="text" maxlength="80" placeholder="Add a task, press Enter" />
-    </form>
-    <ul class="tasks" id="tasks"></ul>
-  </aside>
+      <div class="dow" id="dow"></div>
+      <div class="grid" id="grid"></div>
+    </section>
+
+    <aside class="panel">
+      <h2 id="panelTitle">—</h2>
+      <form id="addForm" autocomplete="off">
+        <input id="taskInput" type="text" maxlength="80" placeholder="Add a task, press Enter" />
+      </form>
+      <ul class="tasks" id="tasks"></ul>
+    </aside>
+  </div>
 </main>
 <script src="app.js"></script>
 </body>

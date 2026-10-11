@@ -24,9 +24,42 @@ button, input { font: inherit; color: inherit; }
 .app {
   height: 100%;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 320px;
+  grid-template-rows: auto minmax(0, 1fr);
   gap: 14px;
   padding: 14px;
+}
+
+.topbar { padding: 0 2px; }
+
+.brand {
+  margin: 0;
+  font-size: 21px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.brand::after {
+  content: "";
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-left: 9px;
+  border-radius: 50%;
+  background: var(--accent);
+  vertical-align: middle;
+}
+
+.tagline {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.content {
+  display: grid;
+  grid-template-columns: minmax(0, 3.5fr) minmax(0, 1fr);
+  gap: 14px;
+  min-height: 0;
 }
 
 .cal {
@@ -43,7 +76,7 @@ button, input { font: inherit; color: inherit; }
   gap: 12px;
 }
 
-.bar h1 {
+.month-title {
   margin: 0;
   font-size: 20px;
   font-weight: 600;
@@ -205,14 +238,14 @@ button, input { font: inherit; color: inherit; }
 
 .empty { color: var(--muted); font-size: 12px; }
 
-@media (max-width: 860px) {
+@media (max-width: 1024px) {
   body { overflow: auto; }
   .app {
     height: auto;
     min-height: 100%;
-    grid-template-columns: minmax(0, 1fr);
     grid-template-rows: auto auto;
   }
+  .content { grid-template-columns: minmax(0, 1fr); }
   .grid { grid-template-rows: repeat(6, 84px); }
   .panel { max-height: 45vh; }
 }
