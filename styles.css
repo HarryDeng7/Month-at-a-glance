@@ -238,7 +238,7 @@ button, input { font: inherit; color: inherit; }
 
 .empty { color: var(--muted); font-size: 12px; }
 
-@media (max-width: 1024px) {
+@media (max-width: 640px) {
   body { overflow: auto; }
   .app {
     height: auto;
