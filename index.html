@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Plan Calendar</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<main class="app">
+  <section class="cal">
+    <header class="bar">
+      <h1 id="title">—</h1>
+      <div class="bar-right">
+        <button class="icon-btn" id="prev" aria-label="Previous month">&#8249;</button>
+        <button class="icon-btn" id="next" aria-label="Next month">&#8250;</button>
+        <button class="pill-btn" id="today">Today</button>
+      </div>
+    </header>
+
+    <div class="dow" id="dow"></div>
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <aside class="panel">
+    <h2 id="panelTitle">—</h2>
+    <form id="addForm" autocomplete="off">
+      <input id="taskInput" type="text" maxlength="80" placeholder="Add a task, press Enter" />
+    </form>
+    <ul class="tasks" id="tasks"></ul>
+  </aside>
+</main>
+<script src="app.js"></script>
+</body>
+</html>

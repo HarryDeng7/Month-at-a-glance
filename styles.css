@@ -1,0 +1,218 @@
+:root {
+  --bg: #0f172a;
+  --panel: #1e293b;
+  --panel-hi: #26334a;
+  --line: #334155;
+  --text: #e2e8f0;
+  --muted: #94a3b8;
+  --accent: #f59e0b;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--text);
+  font-family: ui-sans-serif, system-ui, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+button, input { font: inherit; color: inherit; }
+
+.app {
+  height: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 14px;
+  padding: 14px;
+}
+
+.cal {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  gap: 10px;
+  min-height: 0;
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.bar h1 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.bar-right { display: flex; gap: 8px; }
+
+.icon-btn, .pill-btn {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  height: 36px;
+  cursor: pointer;
+  transition: background .12s, border-color .12s;
+}
+
+.icon-btn { width: 36px; font-size: 18px; line-height: 1; }
+
+.pill-btn { padding: 0 14px; font-size: 13px; }
+
+.icon-btn:hover, .pill-btn:hover { background: var(--panel-hi); border-color: var(--accent); }
+
+.dow {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 8px;
+  font-size: 11px;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: center;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  grid-template-rows: repeat(6, minmax(0, 1fr));
+  gap: 8px;
+  min-height: 0;
+}
+
+.day {
+  background: var(--panel);
+  border: 1px solid transparent;
+  border-radius: 12px;
+  padding: 7px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: background .12s, border-color .12s;
+}
+
+.day:hover { background: var(--panel-hi); }
+.day.other { opacity: .35; }
+.day.selected { border-color: var(--accent); background: var(--panel-hi); }
+
+.num {
+  font-size: 13px;
+  color: #cbd5e1;
+  flex: 0 0 auto;
+}
+
+.day.today .num {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.preview {
+  font-size: 11px;
+  line-height: 1.35;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.preview.done { text-decoration: line-through; opacity: .55; }
+
+.more { font-size: 10px; color: var(--accent); flex: 0 0 auto; }
+
+.panel {
+  background: var(--panel);
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 0;
+}
+
+.panel h2 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+#addForm { flex: 0 0 auto; }
+
+#taskInput {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-size: 13px;
+  outline: none;
+}
+
+#taskInput:focus { border-color: var(--accent); }
+#taskInput::placeholder { color: #64748b; }
+
+.tasks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 0;
+}
+
+.tasks li {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  background: var(--bg);
+  border-radius: 12px;
+  padding: 8px 10px;
+  font-size: 13px;
+}
+
+.tasks input[type="checkbox"] {
+  width: 15px;
+  height: 15px;
+  accent-color: var(--accent);
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+
+.tasks .text { flex: 1; min-width: 0; word-break: break-word; }
+.tasks li.done .text { text-decoration: line-through; color: var(--muted); }
+
+.del {
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 15px;
+  line-height: 1;
+  padding: 2px 4px;
+  flex: 0 0 auto;
+}
+
+.del:hover { color: var(--accent); }
+
+.empty { color: var(--muted); font-size: 12px; }
+
+@media (max-width: 860px) {
+  body { overflow: auto; }
+  .app {
+    height: auto;
+    min-height: 100%;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto;
+  }
+  .grid { grid-template-rows: repeat(6, 84px); }
+  .panel { max-height: 45vh; }
+}
