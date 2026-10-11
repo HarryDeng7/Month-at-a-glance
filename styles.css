@@ -57,7 +57,7 @@ button, input { font: inherit; color: inherit; }
 
 .content {
   display: grid;
-  grid-template-columns: minmax(0, 3.5fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 3fr) minmax(0, 1fr);
   gap: 14px;
   min-height: 0;
 }
