@@ -13,6 +13,9 @@ const panelTitleEl = document.getElementById("panelTitle");
 const tasksEl = document.getElementById("tasks");
 const addForm = document.getElementById("addForm");
 const inputEl = document.getElementById("taskInput");
+const startTimeEl = document.getElementById("startTime");
+const endTimeEl = document.getElementById("endTime");
+const timeErrorEl = document.getElementById("timeError");
 const themeBtn = document.getElementById("themeBtn");
 const shareBtn = document.getElementById("shareBtn");
 const cancelShareBtn = document.getElementById("cancelShareBtn");
@@ -84,6 +87,13 @@ function formatDay(key) {
   return DOW[d.getDay()] + ", " + MONTHS[d.getMonth()].slice(0, 3) + " " + d.getDate();
 }
 
+function timeLabel(t) {
+  if (t.start && t.end) return t.start + "\u2013" + t.end;
+  if (t.start) return t.start;
+  if (t.end) return "\u2192 " + t.end;
+  return "";
+}
+
 function renderHead() {
   dowEl.innerHTML = DOW.map(function (d) { return "<div>" + d + "</div>"; }).join("");
   titleEl.textContent = MONTHS[view.m] + " " + view.y;
@@ -106,7 +116,8 @@ function renderGrid() {
 
     let inner = '<div class="num">' + d.getDate() + "</div>";
     list.slice(0, PREVIEWS).forEach(function (t) {
-      inner += '<div class="preview' + (t.done ? " done" : "") + '">' + escapeHtml(t.text) + "</div>";
+      const label = (t.start ? t.start + " " : "") + t.text;
+      inner += '<div class="preview' + (t.done ? " done" : "") + '">' + escapeHtml(label) + "</div>";
     });
     if (list.length > PREVIEWS) inner += '<div class="more">+' + (list.length - PREVIEWS) + " more</div>";
 
@@ -127,12 +138,15 @@ function renderPanel() {
 
   tasksEl.innerHTML = list.map(function (t, i) {
     const isPicked = picked.has(selected + ":" + t.id);
+    const time = timeLabel(t);
     return '<li class="' + (t.done ? "done" : "") + (isPicked ? " picked" : "") + '" data-i="' + i + '">' +
       (shareMode
         ? '<button class="pick" type="button" aria-pressed="' + isPicked + '" aria-label="Select for sharing">' + (isPicked ? "\u2713" : "") + "</button>"
         : "") +
       '<input type="checkbox"' + (t.done ? " checked" : "") + ' aria-label="Done">' +
-      '<span class="text">' + escapeHtml(t.text) + "</span>" +
+      '<span class="text"><span>' + escapeHtml(t.text) + "</span>" +
+      (time ? '<span class="time">' + escapeHtml(time) + "</span>" : "") +
+      "</span>" +
       '<button class="del" type="button" aria-label="Delete">&#215;</button></li>';
   }).join("");
 }
@@ -169,7 +183,12 @@ function buildPayload() {
   Object.keys(store).forEach(function (key) {
     const list = store[key].filter(function (t) { return picked.has(key + ":" + t.id); });
     if (list.length) {
-      out[key] = list.map(function (t) { return { t: t.text, d: !!t.done }; });
+      out[key] = list.map(function (t) {
+        const item = { t: t.text, d: !!t.done };
+        if (t.start) item.s = t.start;
+        if (t.end) item.e = t.end;
+        return item;
+      });
     }
   });
   return out;
@@ -199,7 +218,9 @@ function renderShared(payload) {
     count += list.length;
     return '<div class="shared-day"><h3>' + escapeHtml(formatDay(key)) + "</h3><ul>" +
       list.map(function (t) {
-        return '<li class="' + (t.d ? "done" : "") + '">' + escapeHtml(t.t) + "</li>";
+        const time = timeLabel({ start: t.s, end: t.e });
+        return '<li class="' + (t.d ? "done" : "") + '">' + escapeHtml(t.t) +
+          (time ? '<span class="shared-time">' + escapeHtml(time) + "</span>" : "") + "</li>";
       }).join("") + "</ul></div>";
   }).join("");
   sharedSubEl.textContent = count + " task" + (count === 1 ? "" : "s") + " shared with you";
@@ -284,13 +305,38 @@ addForm.addEventListener("submit", function (e) {
   e.preventDefault();
   const text = inputEl.value.trim();
   if (!text) return;
-  if (!store[selected]) store[selected] = [];
-  store[selected].push({ id: newId(), text: text, done: false });
+
+  const start = startTimeEl.value;
+  const end = endTimeEl.value;
+  if (start && end && end <= start) {
+    timeErrorEl.hidden = false;
+    return;
+  }
+  timeErrorEl.hidden = true;
+
+  const task = { id: newId(), text: text, done: false };
+  if (start) task.start = start;
+  if (end) task.end = end;
+
+  const list = store[selected] || (store[selected] = []);
+  let at = list.length;
+  if (start) {
+    const idx = list.findIndex(function (t) { return !t.start || t.start > start; });
+    if (idx !== -1) at = idx;
+  }
+  list.splice(at, 0, task);
+
   inputEl.value = "";
+  startTimeEl.value = "";
+  endTimeEl.value = "";
   save();
   renderGrid();
   renderPanel();
   inputEl.focus();
+});
+
+[startTimeEl, endTimeEl].forEach(function (el) {
+  el.addEventListener("input", function () { timeErrorEl.hidden = true; });
 });
 
 tasksEl.addEventListener("change", function (e) {
@@ -405,14 +451,14 @@ openForm.addEventListener("submit", function (e) {
 backBtn.addEventListener("click", showEditor);
 
 document.addEventListener("keydown", function (e) {
-  if (e.target === inputEl) return;
-
   if (e.key === "Escape") {
     if (!shareDialog.hidden) shareDialog.hidden = true;
     else if (!openDialog.hidden) openDialog.hidden = true;
     else if (shareMode) setShareMode(false);
     return;
   }
+
+  if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
 
   const step = e.key === "ArrowLeft" ? -1 : e.key === "ArrowRight" ? 1
     : e.key === "ArrowUp" ? -7 : e.key === "ArrowDown" ? 7 : 0;
